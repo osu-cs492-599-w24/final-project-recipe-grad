@@ -1,23 +1,20 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import edu.oregonstate.cs492.githubsearchwithsettings.R
-import edu.oregonstate.cs492.githubsearchwithsettings.data.GitHubRepo
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepo
 import edu.oregonstate.cs492.githubsearchwithsettings.util.LoadingStatus
-import edu.oregonstate.cs492.githubsearchwithsettings.util.buildGitHubQuery
+
 
 class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
     private val viewModel: RecipeSearchVIewModel by viewModels()
@@ -26,6 +23,7 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
     private val adapter = RecipeRepoListAdapter()
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,8 +36,11 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         loadingIndicator = view.findViewById(R.id.loading_indicator)
 
         searchResultsListRV = view.findViewById(R.id.rv_search_results)
-        searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
+//        searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
+        searchResultsListRV.layoutManager = GridLayoutManager(context, 2)
+
         searchResultsListRV.setHasFixedSize(true)
+
 
         searchResultsListRV.adapter = adapter
 
@@ -79,10 +80,9 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
 
         searchBtn.setOnClickListener {
             val query = searchBoxET.text.toString()
-            if (!TextUtils.isEmpty(query)) {
-                viewModel.loadSearchResults(query)
-                searchResultsListRV.scrollToPosition(0)
-            }
+            viewModel.loadSearchResults(query)
+            searchResultsListRV.scrollToPosition(0)
+
         }
     }
 

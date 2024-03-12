@@ -16,6 +16,7 @@ class RecipeRepoListAdapter ()
     : RecyclerView.Adapter<RecipeRepoListAdapter.RecipeRepoViewHolder>() {
     private var RecipeRepoList = listOf<RecipeRepo>()
 
+
     fun updateRepoList(newRepoList: List<RecipeRepo>?) {
         notifyItemRangeRemoved(0, RecipeRepoList.size)
         RecipeRepoList = newRepoList ?: listOf()
