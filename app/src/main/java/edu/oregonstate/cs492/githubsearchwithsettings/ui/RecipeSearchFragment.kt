@@ -1,11 +1,17 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
+import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,12 +30,13 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
     private val adapter = RecipeRepoListAdapter(::onRecipeRepoClick)
+    private lateinit var viewPopWindow: View
 
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewPopWindow = view
         val searchBoxET: EditText = view.findViewById(R.id.et_search_box)
         val searchBtn: Button = view.findViewById(R.id.btn_search)
 
@@ -89,5 +96,32 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
 //        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo)
 //        findNavController().navigate(directions)
         Log.d("clicktest", "onRecipeRepoClick: ${repo.name}")
+        showPopup()
+    }
+    private fun showPopup() {
+        // Inflate the popup_layout.xml
+        val inflater = LayoutInflater.from(context)
+        val popupView = inflater.inflate(R.layout.pop_window, null)
+
+        // Create the PopupWindow
+        val popupWindow = PopupWindow(
+            popupView,
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        // Set an elevation value for popup window (optional)
+        popupWindow.elevation = 10.0F
+
+        // If you need the popup to dismiss when touched outside
+        popupWindow.isOutsideTouchable = true
+        popupWindow.isFocusable = true
+
+        // Use the view to show the popup window
+        popupWindow.showAtLocation(viewPopWindow, Gravity.CENTER, 0, 0)
+
+        // Dismiss the popup window when touched
+        val closeButton: Button = popupView.findViewById(R.id.close_button)
+        closeButton.setOnClickListener { popupWindow.dismiss() }
     }
 }
