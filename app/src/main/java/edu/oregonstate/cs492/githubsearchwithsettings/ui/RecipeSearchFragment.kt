@@ -37,7 +37,6 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         loadingIndicator = view.findViewById(R.id.loading_indicator)
 
         searchResultsListRV = view.findViewById(R.id.rv_search_results)
-//        searchResultsListRV.layoutManager = LinearLayoutManager(requireContext())
         searchResultsListRV.layoutManager = GridLayoutManager(context, 2)
 
         searchResultsListRV.setHasFixedSize(true)
