@@ -9,10 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import edu.oregonstate.cs492.githubsearchwithsettings.R
-import edu.oregonstate.cs492.githubsearchwithsettings.data.GitHubRepo
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepo
 
-class RecipeRepoListAdapter ()
+class RecipeRepoListAdapter (
+    private val onRecipeRepoClick: (RecipeRepo) -> Unit
+)
     : RecyclerView.Adapter<RecipeRepoListAdapter.RecipeRepoViewHolder>() {
     private var RecipeRepoList = listOf<RecipeRepo>()
 
@@ -34,7 +35,7 @@ class RecipeRepoListAdapter ()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeRepoViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.recipe_repo_list_item, parent, false)
-        return RecipeRepoViewHolder(itemView)
+        return RecipeRepoViewHolder(itemView,onRecipeRepoClick)
     }
 
     override fun onBindViewHolder(holder: RecipeRepoViewHolder, position: Int) {
@@ -43,10 +44,16 @@ class RecipeRepoListAdapter ()
 
     class RecipeRepoViewHolder(
         itemView: View,
+        onClick:(RecipeRepo) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         private val nameTV: TextView = itemView.findViewById(R.id.dishDescription)
         private val img : ImageView =itemView.findViewById(R.id.dishImage)
         private var currentRecipeRepo: RecipeRepo? = null
+        init {
+            itemView.setOnClickListener {
+                currentRecipeRepo?.let(onClick)
+            }
+        }
 
         fun bind(reciperepo: RecipeRepo) {
             currentRecipeRepo = reciperepo

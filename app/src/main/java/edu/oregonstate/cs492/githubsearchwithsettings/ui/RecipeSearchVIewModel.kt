@@ -5,9 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import edu.oregonstate.cs492.githubsearchwithsettings.data.GitHubRepo
-import edu.oregonstate.cs492.githubsearchwithsettings.data.GitHubReposRepository
-import edu.oregonstate.cs492.githubsearchwithsettings.data.GitHubService
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepo
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepoRepository
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeService

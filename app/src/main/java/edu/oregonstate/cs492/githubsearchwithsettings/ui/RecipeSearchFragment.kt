@@ -1,6 +1,7 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -22,7 +23,7 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
     private lateinit var searchResultsListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
-    private val adapter = RecipeRepoListAdapter()
+    private val adapter = RecipeRepoListAdapter(::onRecipeRepoClick)
 
 
 
@@ -86,8 +87,9 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         }
     }
 
-    private fun onGitHubRepoClick(repo: RecipeRepo) {
+    private fun onRecipeRepoClick(repo: RecipeRepo) {
 //        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo)
 //        findNavController().navigate(directions)
+        Log.d("clicktest", "onRecipeRepoClick: ${repo.name}")
     }
 }
