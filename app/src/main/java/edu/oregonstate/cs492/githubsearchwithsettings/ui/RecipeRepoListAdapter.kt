@@ -50,11 +50,9 @@ class RecipeRepoListAdapter ()
         fun bind(reciperepo: RecipeRepo) {
             currentRecipeRepo = reciperepo
             nameTV.text = reciperepo.name
-//            Log.d("adapter", "name: ${reciperepo.name}")
-//            Log.d("adapter", "url: ${reciperepo.url}")
-//            Glide.with(itemView.context)
-//                .load(reciperepo.url)
-//                .into(img)
+            Glide.with(itemView.context)
+                .load(reciperepo.url)
+                .into(img)
 
 
         }
