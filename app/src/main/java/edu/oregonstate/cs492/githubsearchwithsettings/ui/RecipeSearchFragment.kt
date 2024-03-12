@@ -76,7 +76,6 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         )
         }
 
-//        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         searchBtn.setOnClickListener {
             val query = searchBoxET.text.toString()
