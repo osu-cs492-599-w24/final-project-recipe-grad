@@ -1,11 +1,17 @@
 <resources>
     <string name="app_name">My Recipe APP</string>
 
+
+    <string name="loading_error">Unable to fetch forecast data.  Error message: %1$s</string>
     <string name="search_hint">Search Cuisine</string>
     <string name="search">Search</string>
     <string name="search_error">
       Error fetching search results: %1$s
     </string>
+
+    <string name="no_tags_available">No tag</string>
+
+    <string name="pref_city_key" translatable="false">city</string>
 
     <string name="label_github_search">GitHub Search</string>
     <string name="label_github_repo_detail">Repo Details</string>
@@ -29,6 +35,9 @@
     <string name="pref_user_key" translatable="false">user</string>
     <string name="pref_language_key" translatable="false">language</string>
     <string name="pref_first_issues_key" translatable="false">first_issues</string>
+
+    <string name="pref_recipe_search">Recipe Search</string>
+    <string name="pref_recipe_page">Recipe Page</string>
 
     <string name="pref_sort_entry_stars">Stars</string>
     <string name="pref_sort_entry_forks">Forks</string>
