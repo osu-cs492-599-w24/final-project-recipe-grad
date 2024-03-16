@@ -1,12 +1,18 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
 
+import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +26,8 @@ import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepo
 class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private val viewModel: RecipePageViewModel by viewModels()
 
+    private val REQUEST_IMAGE_CAPTURE = 1
+
     private lateinit var webView: WebView
 
     private lateinit var prefs: SharedPreferences
@@ -32,10 +40,12 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private lateinit var tagsTV: TextView
     private lateinit var ingredientsTV : TextView
     private lateinit var videoTitleTV : TextView
+
+    private lateinit var openCameraBtn: Button
+
+    private lateinit var photoImageView: ImageView
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         recipeInfoView = view.findViewById(R.id.recipe_detail)
         loadingErrorTV = view.findViewById(R.id.tv_load_error)
@@ -45,6 +55,10 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         tagsTV = recipeInfoView.findViewById(R.id.tv_tags)
         ingredientsTV = recipeInfoView.findViewById(R.id.tv_ingredients)
         videoTitleTV = recipeInfoView.findViewById(R.id.tv_video_title)
+
+        openCameraBtn = view.findViewById(R.id.openCameraButton)
+
+        photoImageView = view.findViewById(R.id.photoImageView)
 
         webView = view.findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
@@ -88,11 +102,30 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                 recipeInfoView.visibility = View.INVISIBLE
             }
         }
+
+        openCameraBtn.setOnClickListener {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivity(intent)
+        }
+
+        openCameraBtn = view.findViewById(R.id.openCameraButton)
+        openCameraBtn.setOnClickListener {
+            dispatchTakePictureIntent()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadRecipeDetail("Arrabiata")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            photoImageView.setImageBitmap(imageBitmap)
+            photoImageView.visibility = View.VISIBLE
+        }
     }
 
     private fun bind(recipe: RecipeRepo) {
@@ -149,5 +182,10 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         val regex = Regex("""(?:youtube\.com.*(?:\?|\&)v=|youtu\.be/)([^"&?/\s]{11})""")
         val matchResult = regex.find(youtubeUrl)
         return matchResult?.groups?.get(1)?.value
+    }
+
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
     }
 }
