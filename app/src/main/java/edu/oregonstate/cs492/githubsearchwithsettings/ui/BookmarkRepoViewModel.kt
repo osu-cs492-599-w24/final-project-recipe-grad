@@ -2,6 +2,7 @@ package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import edu.oregonstate.cs492.githubsearchwithsettings.data.BookmarkRepoRepository
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeDatabase
@@ -13,6 +14,8 @@ class BookmarkRepoViewModel(application: Application) : AndroidViewModel(applica
         RecipeDatabase.getInstance(application).recipeEntityDao()
     )
 
+    //val bookmarkRepo = repository.getAllRecipe()
+    val allBookmarkRepo: LiveData<List<RecipeEntity>> = repository.getAllRecipe()
     fun addBookmarkRepo(repo: RecipeEntity) {
         viewModelScope.launch {
             repository.insertBookmarkRepo(repo)

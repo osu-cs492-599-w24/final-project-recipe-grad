@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@+id/RecipePage">
+    app:startDestination="@+id/bookMark">
 
     
     <fragment
@@ -19,5 +19,18 @@
         android:id="@+id/RecipePage"
         android:label="@string/pref_recipe_page"
         android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.RecipePageFragment" />
+
+    <fragment
+        android:id="@+id/bookMark"
+        android:label="@string/pref_recipe_page"
+        android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.BookmarkRepoFragment" >
+        <action
+            android:id="@+id/navigate_to_recipe_page"
+            app:destination="@id/RecipePage">
+            <argument
+                android:name="recipeName"
+                app:argType="string"/>
+        </action>
+    </fragment>
 
 </navigation>
