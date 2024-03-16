@@ -7,70 +7,74 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/recipe_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/recipe_detail"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_cuisine"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="Cuisine"
+                android:textSize="30dp" />
 
-                <TextView
-                    android:id="@+id/tv_cuisine"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cuisine"
-                    android:textSize="30dp" />
+            <TextView
+                android:id="@+id/tv_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tags"
+                android:textSize="28sp" />
 
-                <TextView
-                    android:id="@+id/tv_tags"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tags"
-                    android:textSize="28sp" />
+            <TextView
+                android:id="@+id/tv_ingredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingredients"
+                android:textSize="23sp"/>
 
-                <TextView
-                    android:id="@+id/tv_ingredients"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ingredients"
-                    android:textSize="23sp"/>
+            <TextView
+                android:id="@+id/tv_instruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Instruction"
+                android:textSize="23sp" />
 
-                <TextView
-                    android:id="@+id/tv_instruction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Instruction"
-                    android:textSize="23sp" />
+            <TextView
+                android:id="@+id/tv_video_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video:"
+                android:textSize="22sp"/>
 
-                <TextView
-                    android:id="@+id/tv_video_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Video:"
-                    android:textSize="22sp"/>
+            <WebView
+                android:id="@+id/webView"
+                android:layout_width="320dp"
+                android:layout_height="207dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                tools:ignore="WebViewLayout"
+                android:layout_marginBottom="120dp"/>
 
-                <WebView
-                    android:id="@+id/webView"
-                    android:layout_width="320dp"
-                    android:layout_height="207dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    tools:ignore="WebViewLayout" />
+            <TextView
+                android:id="@+id/tv_photo_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="The photo you took:"
+                android:textSize="22sp"
+                android:visibility="gone"/>
 
-                <ImageView
-                    android:id="@+id/photoImageView"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    android:gravity="center"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginLeft="60dp"
-                    android:visibility="gone" />
-            </LinearLayout>
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/photoImageView"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="60dp"
+                android:visibility="gone"
+                android:layout_marginBottom="120dp"/>
+        </LinearLayout>
     </ScrollView>
 
     <Button

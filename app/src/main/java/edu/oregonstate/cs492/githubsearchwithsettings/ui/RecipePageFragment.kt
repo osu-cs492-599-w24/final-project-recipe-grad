@@ -18,13 +18,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import edu.oregonstate.cs492.githubsearchwithsettings.R
+import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeEntity
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeRepo
+import java.io.ByteArrayOutputStream
 
 /**
  * This fragment represents the "current weather" screen.
  */
 class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private val viewModel: RecipePageViewModel by viewModels()
+    private val recipeViewModel : BookmarkRepoViewModel by viewModels()
 
     private val REQUEST_IMAGE_CAPTURE = 1
 
@@ -40,6 +43,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private lateinit var tagsTV: TextView
     private lateinit var ingredientsTV : TextView
     private lateinit var videoTitleTV : TextView
+    private lateinit var photoTV : TextView
 
     private lateinit var openCameraBtn: Button
 
@@ -55,6 +59,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         tagsTV = recipeInfoView.findViewById(R.id.tv_tags)
         ingredientsTV = recipeInfoView.findViewById(R.id.tv_ingredients)
         videoTitleTV = recipeInfoView.findViewById(R.id.tv_video_title)
+        photoTV = recipeInfoView.findViewById(R.id.tv_photo_title)
 
         openCameraBtn = view.findViewById(R.id.openCameraButton)
 
@@ -72,6 +77,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             if (recipe != null) {
                 bind(recipe)
                 recipeInfoView.visibility = View.VISIBLE
+                photoTV.visibility = if (photoImageView.visibility == View.VISIBLE) View.VISIBLE else View.GONE
             }
 
             if (recipe != null) {
@@ -108,7 +114,6 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             startActivity(intent)
         }
 
-        openCameraBtn = view.findViewById(R.id.openCameraButton)
         openCameraBtn.setOnClickListener {
             dispatchTakePictureIntent()
         }
@@ -123,8 +128,16 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
+            val imageData = convertBitmapToByteArray(imageBitmap)
             photoImageView.setImageBitmap(imageBitmap)
             photoImageView.visibility = View.VISIBLE
+
+            val fakeRecipeEntity = RecipeEntity(
+                recipeName = "Arrabiata",
+                imageData = imageData
+            )
+
+            recipeViewModel.addBookmarkRepo(fakeRecipeEntity)
         }
     }
 
@@ -175,7 +188,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         ingredientsTV.text = "Ingredients:\n$ingredientsString \n"
 
 
-        videoTitleTV.text = "\nVideo tutorial:"
+        videoTitleTV.text = "\nVideo tutorial:\n"
     }
 
     fun extractVideoIdFromUrl(youtubeUrl: String): String? {
@@ -187,5 +200,11 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+    }
+
+    private fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return stream.toByteArray()
     }
 }
