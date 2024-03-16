@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "RecipeEntity")
 data class RecipeEntity(
     @PrimaryKey val recipeName: String,
+    val isClicked : Boolean,
     val imageData: ByteArray? // Image data stored as a ByteArray
 )

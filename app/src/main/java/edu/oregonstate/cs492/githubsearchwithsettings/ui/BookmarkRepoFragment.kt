@@ -1,13 +1,10 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -50,13 +47,6 @@ class BookmarkRepoFragment : Fragment() {
                 //emptyView.visibility = View.VISIBLE
             }
         })
-        //recyclerView.visibility = View.VISIBLE
-        val fakeRecipeEntity = RecipeEntity(
-            recipeName = "Real Recipe",
-            imageData = byteArrayOf(0x12, 0x34, 0x56)
-        )
-        viewModel.addBookmarkRepo(fakeRecipeEntity)
-
     }
 
     private fun onRecipeEntityClick(recipeEntity: RecipeEntity) {

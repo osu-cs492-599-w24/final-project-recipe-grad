@@ -22,7 +22,6 @@ class RecipePageViewModel: ViewModel() {
 
     private val _error = MutableLiveData<Throwable?>(null)
 
-
     val error: LiveData<Throwable?> = _error
 
 

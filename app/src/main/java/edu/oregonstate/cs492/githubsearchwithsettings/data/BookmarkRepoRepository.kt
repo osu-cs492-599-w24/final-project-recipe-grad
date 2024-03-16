@@ -12,5 +12,12 @@ class BookmarkRepoRepository(
         return dao.getAllRecipe()
     }
 
-    fun getBookmarkRecipeByName(name: String) = dao.getRecipeByName(name)
+    fun getIsClickedStatus(recipeName: String): LiveData<Boolean> {
+        return dao.getIsClickedStatus(recipeName)
+    }
+
+
+    fun getImageData(recipeName: String): LiveData<ByteArray?>? {
+        return dao.getImageData(recipeName)
+    }
 }

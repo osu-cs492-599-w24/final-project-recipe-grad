@@ -1,6 +1,5 @@
 package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
-import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +12,10 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -126,10 +124,17 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         val popFoodName : TextView = popupView.findViewById(R.id.foodName)
         val popingredient : TextView = popupView.findViewById(R.id.ingredient)
         val img : ImageView = popupView.findViewById(R.id.img)
+        val startMakingBtn: Button = popupView.findViewById(R.id.start_making)
         popFoodName.text = repo.name
         Glide.with(viewPopWindow.context)
             .load(repo.url)
             .into(img)
+
+        startMakingBtn.setOnClickListener {
+            val action = BookmarkRepoFragmentDirections.navigateToRecipePage(repo.name)
+            findNavController().navigate(action)
+            popupWindow.dismiss()
+        }
 
 
         // Set an elevation value for popup window (optional)

@@ -3,6 +3,7 @@ package edu.oregonstate.cs492.githubsearchwithsettings.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import edu.oregonstate.cs492.githubsearchwithsettings.data.BookmarkRepoRepository
 import edu.oregonstate.cs492.githubsearchwithsettings.data.RecipeDatabase
@@ -14,6 +15,7 @@ class BookmarkRepoViewModel(application: Application) : AndroidViewModel(applica
         RecipeDatabase.getInstance(application).recipeEntityDao()
     )
 
+    private val _recipe = MutableLiveData<RecipeEntity?>()
     //val bookmarkRepo = repository.getAllRecipe()
     val allBookmarkRepo: LiveData<List<RecipeEntity>> = repository.getAllRecipe()
     fun addBookmarkRepo(repo: RecipeEntity) {
@@ -33,5 +35,11 @@ class BookmarkRepoViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun getBookmarkRepoByName(name: String) = repository.getBookmarkRecipeByName(name)
+    fun getIsClickedStatus(recipeName: String): LiveData<Boolean> {
+        return repository.getIsClickedStatus(recipeName)
+    }
+
+    fun getImageData(recipeName: String): LiveData<ByteArray?>? {
+        return repository.getImageData(recipeName)
+    }
 }

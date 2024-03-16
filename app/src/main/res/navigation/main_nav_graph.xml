@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@+id/bookMark">
+    app:startDestination="@+id/RecipeSearch">
 
     
     <fragment
@@ -12,7 +12,11 @@
         android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.RecipeSearchFragment">
         <action
             android:id="@+id/navigate_to_recipe_page"
-            app:destination="@id/RecipePage"/>
+            app:destination="@id/RecipePage">
+            <argument
+                android:name="recipeNameSearch"
+                app:argType="string"/>
+        </action>
     </fragment>
 
     <fragment
@@ -21,14 +25,14 @@
         android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.RecipePageFragment" />
 
     <fragment
-        android:id="@+id/bookMark"
+        android:id="@+id/FavoritePage"
         android:label="@string/pref_recipe_page"
         android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.BookmarkRepoFragment" >
         <action
             android:id="@+id/navigate_to_recipe_page"
             app:destination="@id/RecipePage">
             <argument
-                android:name="recipeName"
+                android:name="recipeNameFavorite"
                 app:argType="string"/>
         </action>
     </fragment>

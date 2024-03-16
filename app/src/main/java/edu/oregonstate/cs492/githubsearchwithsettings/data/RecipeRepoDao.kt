@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import androidx.lifecycle.LiveData
 @Dao
 interface RecipeRepoDao {
@@ -18,6 +17,9 @@ interface RecipeRepoDao {
     @Query("SELECT * FROM RecipeEntity ORDER BY recipeName")
     fun getAllRecipe(): LiveData<List<RecipeEntity>>
 
-    @Query("SELECT * FROM RecipeEntity WHERE recipeName = :name LIMIT 1")
-    fun getRecipeByName(name: String): Flow<RecipeEntity?>
+    @Query("SELECT isClicked FROM RecipeEntity WHERE recipeName = :recipeName")
+    fun getIsClickedStatus(recipeName: String): LiveData<Boolean>
+
+    @Query("SELECT imageData FROM RecipeEntity WHERE recipeName = :recipeName")
+    fun getImageData(recipeName: String): LiveData<ByteArray?>
 }

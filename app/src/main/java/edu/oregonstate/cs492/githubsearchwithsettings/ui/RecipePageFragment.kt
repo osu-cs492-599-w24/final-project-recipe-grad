@@ -5,13 +5,13 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -45,9 +45,13 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
     private lateinit var videoTitleTV : TextView
     private lateinit var photoTV : TextView
 
-    private lateinit var openCameraBtn: Button
+    private lateinit var starImageView: ImageView
+    private var isStarFilled: Boolean = false
+
+    private lateinit var openCameraBtn: ImageView
 
     private lateinit var photoImageView: ImageView
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,8 +66,9 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         photoTV = recipeInfoView.findViewById(R.id.tv_photo_title)
 
         openCameraBtn = view.findViewById(R.id.openCameraButton)
-
         photoImageView = view.findViewById(R.id.photoImageView)
+
+        starImageView = view.findViewById(R.id.star_favorite)
 
         webView = view.findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
@@ -72,6 +77,32 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
+
+        val recipeName = arguments?.getString("recipeNameFavorite") ?: arguments?.getString("recipeNameSearch")
+
+        recipeName?.let { name ->
+            recipeViewModel.getIsClickedStatus(name).observe(viewLifecycleOwner) { isClicked ->
+                if (isClicked != null) {
+                    if (isClicked) {
+                        starImageView.setImageResource(R.drawable.ic_action_favorite_click)
+                        isStarFilled = true
+                        recipeViewModel.getImageData(name)?.observe(viewLifecycleOwner) { imageData ->
+                            imageData?.let {
+                                // Decode the byte array into a Bitmap
+                                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                                // Set the Bitmap to photoImageView
+                                photoImageView.setImageBitmap(bitmap)
+                                photoImageView.visibility = View.VISIBLE
+                            }
+                        }
+                    } else {
+                        starImageView.setImageResource(R.drawable.ic_action_favorite_empty)
+                        isStarFilled = false
+                        photoImageView.visibility = View.GONE
+                    }
+                }
+            }
+        }
 
         viewModel.recipe.observe(viewLifecycleOwner) { recipe ->
             if (recipe != null) {
@@ -90,6 +121,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                 }
             }
         }
+
 
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
@@ -117,11 +149,49 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         openCameraBtn.setOnClickListener {
             dispatchTakePictureIntent()
         }
+
+        starImageView.setOnClickListener {
+            isStarFilled = !isStarFilled
+            val recipeNameFavorite = arguments?.getString("recipeNameFavorite")
+            val recipeNameSearch = arguments?.getString("recipeNameSearch")
+            var getName : String = ""
+            if (recipeNameFavorite != null) {
+                getName = recipeNameFavorite
+                viewModel.loadRecipeDetail(getName)
+
+            }else if (recipeNameSearch != null) {
+                getName = recipeNameSearch
+                viewModel.loadRecipeDetail(getName)
+            }
+            else {
+                Log.d("RecipePageFragment", "Don't have value!")
+            }
+            if (isStarFilled) {
+                starImageView.setImageResource(R.drawable.ic_action_favorite_click)
+                val saveRecipeEntity = RecipeEntity(getName, true, null)
+                recipeViewModel.addBookmarkRepo(saveRecipeEntity)
+
+            } else {
+                val saveRecipeEntity = RecipeEntity(getName, false,null)
+                starImageView.setImageResource(R.drawable.ic_action_favorite_empty)
+                recipeViewModel.removeBookmarkRepo(saveRecipeEntity)
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadRecipeDetail("Arrabiata")
+        val recipeNameFavorite = arguments?.getString("recipeNameFavorite")
+        val recipeNameSearch = arguments?.getString("recipeNameSearch")
+        if (recipeNameFavorite != null) {
+            viewModel.loadRecipeDetail(recipeNameFavorite)
+        }else if (recipeNameSearch != null) {
+            viewModel.loadRecipeDetail(recipeNameSearch)
+        }
+        else {
+            Log.d("RecipePageFragment", "Don't have value!")
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -132,20 +202,32 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             photoImageView.setImageBitmap(imageBitmap)
             photoImageView.visibility = View.VISIBLE
 
-            val fakeRecipeEntity = RecipeEntity(
-                recipeName = "Arrabiata",
-                imageData = imageData
-            )
+            val recipeNameFavorite = arguments?.getString("recipeNameFavorite")
+            val recipeNameSearch = arguments?.getString("recipeNameSearch")
 
-            recipeViewModel.addBookmarkRepo(fakeRecipeEntity)
+
+
+            if (recipeNameFavorite != null) {
+                viewModel.loadRecipeDetail(recipeNameFavorite)
+                val saveRecipeEntity = RecipeEntity(recipeNameFavorite, true, imageData)
+                recipeViewModel.addBookmarkRepo(saveRecipeEntity)
+            }else if (recipeNameSearch != null) {
+                viewModel.loadRecipeDetail(recipeNameSearch)
+                val saveRecipeEntity = RecipeEntity(recipeNameSearch, true, imageData)
+                recipeViewModel.addBookmarkRepo(saveRecipeEntity)
+            }
+            else {
+                Log.d("RecipePageFragment", "Don't have value!")
+            }
         }
     }
 
     private fun bind(recipe: RecipeRepo) {
         cuisineTV.text = "Cuisine: " + recipe.name + "\n"
 
-        val instruction = recipe.instruction?.replace("\n", "") ?: ""
-        val result = instruction.split(".").mapIndexedNotNull { index, sentence ->
+        val removeNum = recipe.instruction?.replace(Regex("\\d+\\."), "")
+        val replaceNewLine = removeNum?.replace("\n", "") ?: ""
+        val result = replaceNewLine.split(".").mapIndexedNotNull { index, sentence ->
             val trimmedSentence = sentence.trim()
             if (trimmedSentence.isNotBlank()) {
                 "${index + 1}.$trimmedSentence."
