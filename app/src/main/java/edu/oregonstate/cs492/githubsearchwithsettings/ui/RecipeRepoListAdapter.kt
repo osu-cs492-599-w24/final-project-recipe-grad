@@ -61,8 +61,6 @@ class RecipeRepoListAdapter (
             Glide.with(itemView.context)
                 .load(reciperepo.url)
                 .into(img)
-
-
         }
     }
 }
