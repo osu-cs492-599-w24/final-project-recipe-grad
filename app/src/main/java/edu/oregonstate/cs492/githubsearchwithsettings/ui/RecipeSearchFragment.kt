@@ -20,6 +20,8 @@ import edu.oregonstate.cs492.githubsearchwithsettings.util.LoadingStatus
 class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
     private val viewModel: RecipeSearchVIewModel by viewModels()
 
+    private val recipeViewModel: BookmarkRepoViewModel by viewModels()
+
     private lateinit var searchResultsListRV: RecyclerView
     private lateinit var searchErrorTV: TextView
     private lateinit var loadingIndicator: CircularProgressIndicator
@@ -90,5 +92,6 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
 //        val directions = GitHubSearchFragmentDirections.navigateToRepoDetail(repo)
 //        findNavController().navigate(directions)
         Log.d("clicktest", "onRecipeRepoClick: ${repo.name}")
+
     }
 }
