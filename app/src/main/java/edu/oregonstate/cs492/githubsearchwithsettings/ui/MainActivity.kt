@@ -6,25 +6,49 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
 import com.google.android.material.appbar.MaterialToolbar
+import edu.oregonstate.cs492.githubsearchwithsettings.MainNavGraphDirections
 import edu.oregonstate.cs492.githubsearchwithsettings.R
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var appBarConfig: AppBarConfiguration
 
+    private lateinit var recipeSearchBtn : Button
+    private lateinit var recipeFavoriteBtn : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        recipeSearchBtn = findViewById(R.id.btn_RecipeSearch)
+        recipeFavoriteBtn = findViewById(R.id.btn_RecipeFavorite)
+
+
+
+        recipeSearchBtn.setOnClickListener {
+            val action = MainNavGraphDirections.actionToRecipeSearch()
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(action)
+        }
+
+        recipeFavoriteBtn.setOnClickListener {
+            val action = MainNavGraphDirections.actionToRecipeFavorite()
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(action)
+        }
 //        val navHostFragment = supportFragmentManager.findFragmentById(
 //            R.id.nav_host_fragment
 //        ) as NavHostFragment
