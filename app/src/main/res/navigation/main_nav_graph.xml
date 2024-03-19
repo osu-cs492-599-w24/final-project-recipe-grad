@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/FavoritePage"
-        android:label="@string/pref_recipe_page"
+        android:label="FavoritePage"
         android:name="edu.oregonstate.cs492.githubsearchwithsettings.ui.BookmarkRepoFragment" >
         <action
             android:id="@+id/navigate_to_recipe_page"

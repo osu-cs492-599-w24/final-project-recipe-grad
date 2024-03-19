@@ -117,8 +117,11 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         val displayMetrics = Resources.getSystem().displayMetrics
         val screenWidthPx = displayMetrics.widthPixels
         val width = (screenWidthPx * 0.8).toInt() // Calculate 80% of screen width
+        val screenHeight = displayMetrics.heightPixels
+        val popupHeight = (screenHeight * 0.8).toInt() // Calculate 80% of screen height
+
         popupWindow.width = width
-        //
+        popupWindow.height = popupHeight
 
 
         val popFoodName : TextView = popupView.findViewById(R.id.foodName)
@@ -135,6 +138,7 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
             findNavController().navigate(action)
             popupWindow.dismiss()
         }
+        popingredient.text = get_ingredient(repo)
 
 
         // Set an elevation value for popup window (optional)
@@ -150,5 +154,35 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
         // Dismiss the popup window when touched
         val closeButton: Button = popupView.findViewById(R.id.close_button)
         closeButton.setOnClickListener { popupWindow.dismiss() }
+    }
+
+    private fun get_ingredient(recipe: RecipeRepo): String {
+        val ingredients = mutableListOf<String?>()
+        ingredients.add(recipe.ingredient1)
+        ingredients.add(recipe.ingredient2)
+        ingredients.add(recipe.ingredient3)
+        ingredients.add(recipe.ingredient4)
+        ingredients.add(recipe.ingredient5)
+        ingredients.add(recipe.ingredient6)
+        ingredients.add(recipe.ingredient7)
+        ingredients.add(recipe.ingredient8)
+        ingredients.add(recipe.ingredient9)
+        ingredients.add(recipe.ingredient10)
+        ingredients.add(recipe.ingredient11)
+        ingredients.add(recipe.ingredient12)
+        ingredients.add(recipe.ingredient13)
+        ingredients.add(recipe.ingredient14)
+        ingredients.add(recipe.ingredient15)
+        ingredients.add(recipe.ingredient16)
+        ingredients.add(recipe.ingredient17)
+        ingredients.add(recipe.ingredient18)
+        ingredients.add(recipe.ingredient19)
+        ingredients.add(recipe.ingredient20)
+
+        return ingredients
+            .filterNotNull()
+            .filter { it.isNotBlank() }
+            .joinToString("\n") { it.trim() }
+
     }
 }
