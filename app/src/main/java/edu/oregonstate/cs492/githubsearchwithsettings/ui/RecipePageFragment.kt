@@ -6,10 +6,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
@@ -73,6 +75,8 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         webView = view.findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()
+        webView.webChromeClient = WebChromeClient()
+
 
 
         prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -109,15 +113,37 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                 bind(recipe)
                 recipeInfoView.visibility = View.VISIBLE
                 photoTV.visibility = if (photoImageView.visibility == View.VISIBLE) View.VISIBLE else View.GONE
-            }
 
-            if (recipe != null) {
                 val videoUrl = recipe.youtubeUrl
                 val videoId = extractVideoIdFromUrl(videoUrl)
+                webView.webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                        url?.let {
+                            // Check if the URL is a YouTube video link
+                            if (it.startsWith("https://www.youtube.com") || it.startsWith("https://m.youtube.com") || it.startsWith("https://youtube.com") || it.contains("youtu.be")) {
+                                // Intent to open the YouTube link in the YouTube app
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                                startActivity(intent)
+                                return true // Indicates you've handled the URL
+                            }
+                        }
+                        return false // Indicates the WebView should handle the URL
+                    }
+                }
 
                 if (videoId != null) {
-                    val embedUrl = "https://www.youtube.com/embed/$videoId"
-                    webView.loadUrl(embedUrl)
+                    val embedUrl = "https://www.youtube.com/embed/${videoId}"
+//                    webView.loadUrl(embedUrl)
+                    val htmlContent = """
+                    <html>
+                    <body>
+                    <iframe width="100%" height="100%" src="$embedUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </body>
+                    </html>
+                     """.trimIndent()
+
+                    webView.loadData(htmlContent, "text/html", "UTF-8")
+
                 }
             }
         }
