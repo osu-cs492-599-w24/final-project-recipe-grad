@@ -2,85 +2,42 @@ package edu.oregonstate.cs492.githubsearchwithsettings.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.widget.Button
+
 import androidx.activity.enableEdgeToEdge
-import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
+import androidx.core.view.updatePadding
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
-import edu.oregonstate.cs492.githubsearchwithsettings.MainNavGraphDirections
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import edu.oregonstate.cs492.githubsearchwithsettings.R
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private lateinit var appBarConfig: AppBarConfiguration
-
-    private lateinit var recipeSearchBtn : Button
-    private lateinit var recipeFavoriteBtn : Button
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        recipeSearchBtn = findViewById(R.id.btn_RecipeSearch)
-        recipeFavoriteBtn = findViewById(R.id.btn_RecipeFavorite)
-
-
-
-        recipeSearchBtn.setOnClickListener {
-            val action = MainNavGraphDirections.actionToRecipeSearch()
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val navController = navHostFragment.navController
-            navController.navigate(action)
+        val navHostFragment = supportFragmentManager.findFragmentById(
+            R.id.nav_host_fragment
+        ) as NavHostFragment
+        val navController = navHostFragment.navController
+        val bottomview:BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomview.setupWithNavController(navController)
+        bottomview.setOnApplyWindowInsetsListener{ view,insets ->
+            view.updatePadding(bottom = 0)
+            insets
         }
+        appBarConfig = AppBarConfiguration(navController.graph)
+        val appBar:MaterialToolbar = findViewById(R.id.top_app_bar)
+        setSupportActionBar(appBar)
+        setupActionBarWithNavController(navController,appBarConfig)
 
-        recipeFavoriteBtn.setOnClickListener {
-            val action = MainNavGraphDirections.actionToRecipeFavorite()
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val navController = navHostFragment.navController
-            navController.navigate(action)
-        }
-//        val navHostFragment = supportFragmentManager.findFragmentById(
-//            R.id.nav_host_fragment
-//        ) as NavHostFragment
-//        val navController = navHostFragment.navController
-//        appBarConfig = AppBarConfiguration(navController.graph)
-//        val appBar: MaterialToolbar = findViewById(R.id.top_app_bar)
-//        setSupportActionBar(appBar)
-//        setupActionBarWithNavController(navController, appBarConfig)
-
-//        addMenuProvider(
-//            object : MenuProvider {
-//                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                    menuInflater.inflate(R.menu.activity_main_menu, menu)
-//                }
-//
-//                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-//                    return when (menuItem.itemId) {
-//                        R.id.action_settings -> {
-//                            Log.d(TAG, "Settings action selected")
-//                            findNavController(R.id.nav_host_fragment).navigate(R.id.navigate_to_settings)
-//                            true
-//                        }
-//                        else -> false
-//                    }
-//                }
-//
-//            },
-//            this,
-//            Lifecycle.State.STARTED
-//        )
     }
-
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfig) || super.onSupportNavigateUp()

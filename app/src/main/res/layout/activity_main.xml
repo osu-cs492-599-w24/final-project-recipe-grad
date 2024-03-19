@@ -8,17 +8,18 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/top_app_bar"
             style="?attr/toolbarStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:minHeight="?attr/actionBarSize" />
 
         <androidx.fragment.app.FragmentContainerView
@@ -26,33 +27,18 @@
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/top_app_bar"
+            android:layout_above="@id/bottom_nav"
             app:defaultNavHost="true"
             app:navGraph="@navigation/main_nav_graph" />
 
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
-
-        <Button
-            android:id="@+id/btn_RecipeSearch"
-            android:layout_width="wrap_content"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="RecipeSearch" />
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/bottom_drawer"/>
 
-        <Button
-            android:id="@+id/btn_RecipeFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="RecipeFavorite" />
     </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

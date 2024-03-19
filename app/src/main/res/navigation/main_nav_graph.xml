@@ -3,9 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@+id/FavoritePage">
-
-
+    app:startDestination="@+id/RecipeSearch">
     <action
         android:id="@+id/action_to_recipe_search"
         app:destination="@id/RecipeSearch" />
