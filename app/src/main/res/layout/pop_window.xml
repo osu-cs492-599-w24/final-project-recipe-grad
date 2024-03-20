@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background3"
+    android:background="@drawable/popwindow"
     >
 
 <LinearLayout
@@ -16,7 +16,7 @@
    >
 
     <TextView
-        android:padding="16dp"
+        android:padding="25dp"
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
