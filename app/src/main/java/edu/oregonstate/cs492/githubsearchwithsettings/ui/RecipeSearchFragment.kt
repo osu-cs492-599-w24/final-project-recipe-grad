@@ -134,7 +134,7 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
             .into(img)
 
         startMakingBtn.setOnClickListener {
-            val action = BookmarkRepoFragmentDirections.navigateToRecipePage(repo.name)
+            val action = RecipeSearchFragmentDirections.navigateToRecipePage(repo.name)
             findNavController().navigate(action)
             popupWindow.dismiss()
         }

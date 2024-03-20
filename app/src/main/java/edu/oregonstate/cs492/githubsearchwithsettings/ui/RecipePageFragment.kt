@@ -230,9 +230,9 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         val recipeNameSearch = arguments?.getString("recipeNameSearch")
         if (recipeNameFavorite != null) {
             viewModel.loadRecipeDetail(recipeNameFavorite)
+            openCameraBtn.visibility = View.VISIBLE
         }else if (recipeNameSearch != null) {
             viewModel.loadRecipeDetail(recipeNameSearch)
-            openCameraBtn.visibility = View.VISIBLE
         }
         else {
             Log.d("RecipePageFragment", "Don't have value!")
