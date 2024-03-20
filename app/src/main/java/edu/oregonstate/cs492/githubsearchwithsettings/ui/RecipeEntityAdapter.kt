@@ -17,14 +17,6 @@ class RecipeEntityAdapter (
 ) : RecyclerView.Adapter<RecipeEntityAdapter.RecipeEntityViewHolder>() {
     private var recipeList = listOf<RecipeEntity>()
 
-
-    fun updateRepoList(newRecipeList: List<RecipeEntity>?) {
-        recipeList = newRecipeList ?: listOf()
-        notifyDataSetChanged()
-    }
-
-    override fun getItemCount() = recipeList.size
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeEntityViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.bookmark_list, parent, false)
@@ -32,16 +24,25 @@ class RecipeEntityAdapter (
     }
 
     override fun onBindViewHolder(holder: RecipeEntityViewHolder, position: Int) {
-        holder.bind(recipeList[position])
+        holder.bind(recipeList[position], position + 1) // Add 1 to position to start index from 1
+    }
+
+    override fun getItemCount() = recipeList.size
+
+    fun updateRepoList(newRecipeList: List<RecipeEntity>?) {
+        recipeList = newRecipeList ?: listOf()
+        notifyDataSetChanged()
     }
 
     class RecipeEntityViewHolder(
         itemView: View,
-        private val onClick:(RecipeEntity) -> Unit
+        private val onClick: (RecipeEntity) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
+        private val indexTextView: TextView = itemView.findViewById(R.id.tv_index)
         private val nameTextView: TextView = itemView.findViewById(R.id.tv_bookmark_list)
 
-        fun bind(recipeEntity: RecipeEntity) {
+        fun bind(recipeEntity: RecipeEntity, index: Int) {
+            indexTextView.text = index.toString()
             nameTextView.text = recipeEntity.recipeName
             itemView.setOnClickListener {
                 onClick(recipeEntity)
