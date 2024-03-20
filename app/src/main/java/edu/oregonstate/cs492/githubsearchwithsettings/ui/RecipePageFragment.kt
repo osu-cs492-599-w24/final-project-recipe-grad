@@ -33,6 +33,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
 
     private val REQUEST_IMAGE_CAPTURE = 1
 
+    private var bitmap : Bitmap? = null
     private lateinit var webView: WebView
 
     private lateinit var prefs: SharedPreferences
@@ -88,19 +89,17 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             recipeViewModel.getIsClickedStatus(name).observe(viewLifecycleOwner) { isClicked ->
                 if (isClicked != null) {
                     if (isClicked) {
-                        starImageView.setImageResource(R.drawable.ic_action_favorite_click)
+                        starImageView.setImageResource(R.drawable.star_full)
                         isStarFilled = true
                         recipeViewModel.getImageData(name)?.observe(viewLifecycleOwner) { imageData ->
                             imageData?.let {
-                                // Decode the byte array into a Bitmap
-                                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-                                // Set the Bitmap to photoImageView
+                                bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                                 photoImageView.setImageBitmap(bitmap)
                                 photoImageView.visibility = View.VISIBLE
                             }
                         }
                     } else {
-                        starImageView.setImageResource(R.drawable.ic_action_favorite_empty)
+                        starImageView.setImageResource(R.drawable.star)
                         isStarFilled = false
                         photoImageView.visibility = View.GONE
                     }
@@ -119,9 +118,9 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                 webView.webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                         url?.let {
-                            // Check if the URL is a YouTube video link
+                            // Check URL is a YouTube video link or not
                             if (it.startsWith("https://www.youtube.com") || it.startsWith("https://m.youtube.com") || it.startsWith("https://youtube.com") || it.contains("youtu.be")) {
-                                // Intent to open the YouTube link in the YouTube app
+                                // Open the YouTube link in the YouTube app
                                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
                                 startActivity(intent)
                                 return true // Indicates you've handled the URL
@@ -170,6 +169,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         openCameraBtn.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivity(intent)
+            photoImageView.visibility = View.VISIBLE
         }
 
         openCameraBtn.setOnClickListener {
@@ -193,14 +193,33 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                 Log.d("RecipePageFragment", "Don't have value!")
             }
             if (isStarFilled) {
-                starImageView.setImageResource(R.drawable.ic_action_favorite_click)
-                val saveRecipeEntity = RecipeEntity(getName, true, null)
+                starImageView.setImageResource(R.drawable.star_full)
+                var saveRecipeEntity = RecipeEntity(getName, true, null)
+                val tempBitmap = bitmap
+                if(bitmap != null){
+                    val stream = ByteArrayOutputStream()
+                    tempBitmap?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    val byteArray = stream.toByteArray()
+                    photoImageView.setImageBitmap(tempBitmap)
+                    photoTV.visibility = if (photoImageView.visibility == View.VISIBLE) View.VISIBLE else View.GONE
+                    saveRecipeEntity = RecipeEntity(getName, true, byteArray)
+                    photoImageView.visibility = View.VISIBLE
+                }
                 recipeViewModel.addBookmarkRepo(saveRecipeEntity)
+                openCameraBtn.visibility = View.VISIBLE
+
 
             } else {
                 val saveRecipeEntity = RecipeEntity(getName, false,null)
-                starImageView.setImageResource(R.drawable.ic_action_favorite_empty)
+                starImageView.setImageResource(R.drawable.star)
                 recipeViewModel.removeBookmarkRepo(saveRecipeEntity)
+                openCameraBtn.visibility = View.GONE
+                photoImageView.visibility = View.GONE
+                if(bitmap == null){
+                    bitmap = null
+                    photoImageView.setImageBitmap(bitmap)
+                    photoTV.visibility = if (photoImageView.visibility == View.VISIBLE) View.VISIBLE else View.GONE
+                }
             }
         }
     }
@@ -213,6 +232,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             viewModel.loadRecipeDetail(recipeNameFavorite)
         }else if (recipeNameSearch != null) {
             viewModel.loadRecipeDetail(recipeNameSearch)
+            openCameraBtn.visibility = View.VISIBLE
         }
         else {
             Log.d("RecipePageFragment", "Don't have value!")
@@ -226,7 +246,6 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
             val imageData = convertBitmapToByteArray(imageBitmap)
             photoImageView.setImageBitmap(imageBitmap)
-            photoImageView.visibility = View.VISIBLE
 
             val recipeNameFavorite = arguments?.getString("recipeNameFavorite")
             val recipeNameSearch = arguments?.getString("recipeNameSearch")
@@ -264,7 +283,11 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
 
         instructionTV.text = "Instruction:\n$result"
 
-        tagsTV.text = "Tag: ${recipe.tags ?: getString(R.string.no_tags_available)} \n"
+        if (recipe.tags == null) {
+            tagsTV.visibility = View.GONE
+        } else {
+            tagsTV.text = "Tag: ${recipe.tags} \n"
+        }
 
         val ingredients = mutableListOf<String?>()
         ingredients.add(recipe.ingredient1)
@@ -288,10 +311,43 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
         ingredients.add(recipe.ingredient19)
         ingredients.add(recipe.ingredient20)
 
+        val measures = mutableListOf<String?>()
+        measures.add(recipe.measure1)
+        measures.add(recipe.measure2)
+        measures.add(recipe.measure3)
+        measures.add(recipe.measure4)
+        measures.add(recipe.measure5)
+        measures.add(recipe.measure6)
+        measures.add(recipe.measure7)
+        measures.add(recipe.measure8)
+        measures.add(recipe.measure9)
+        measures.add(recipe.measure10)
+        measures.add(recipe.measure11)
+        measures.add(recipe.measure12)
+        measures.add(recipe.measure13)
+        measures.add(recipe.measure14)
+        measures.add(recipe.measure15)
+        measures.add(recipe.measure16)
+        measures.add(recipe.measure17)
+        measures.add(recipe.measure18)
+        measures.add(recipe.measure19)
+        measures.add(recipe.measure20)
+
         val ingredientsString = ingredients
-            .filterNotNull()
-            .filter { it.isNotBlank() }
-            .joinToString("\n") { it.trim() }
+            .mapIndexedNotNull { index, ingredient ->
+                val measure = measures.getOrNull(index)
+                if (ingredient != null && ingredient.isNotBlank()) {
+                    val ingredientWithMeasure = if (!measure.isNullOrBlank()) {
+                        "$ingredient : $measure"
+                    } else {
+                        ingredient
+                    }
+                    "${index + 1}. $ingredientWithMeasure"
+                } else {
+                    null
+                }
+            }
+            .joinToString("\n")
 
         ingredientsTV.text = "Ingredients:\n$ingredientsString \n"
 
