@@ -88,11 +88,14 @@ class RecipeSearchFragment: Fragment(R.layout.fragment_recipe_search) {
 
 //        val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
+        val query = searchBoxET.text.toString()
+        viewModel.loadSearchResults(query)
+        searchResultsListRV.scrollToPosition(0)
+
         searchBtn.setOnClickListener {
             val query = searchBoxET.text.toString()
             viewModel.loadSearchResults(query)
             searchResultsListRV.scrollToPosition(0)
-
         }
     }
 

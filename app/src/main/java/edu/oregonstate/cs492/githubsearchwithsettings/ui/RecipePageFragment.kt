@@ -91,6 +91,7 @@ class RecipePageFragment : Fragment(R.layout.fragment_recipe_page) {
                     if (isClicked) {
                         starImageView.setImageResource(R.drawable.star_full)
                         isStarFilled = true
+                        openCameraBtn.visibility = View.VISIBLE
                         recipeViewModel.getImageData(name)?.observe(viewLifecycleOwner) { imageData ->
                             imageData?.let {
                                 bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
